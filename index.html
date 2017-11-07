@@ -1,0 +1,178 @@
+<html>
+    <head>
+        <title>Chapter 7</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="Winwheel.js"></script>
+        <script type="text/javascript" src="sarge.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    </head>
+    <body>
+        <div align="center">
+            <h1>Extreme Ownership Chapter 7: Prioritize and Execute</h1>
+            <br />
+            <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+            	<td>
+					<table id="scores">
+						
+					</table>            		
+            	</td>
+                <td>
+                    <div class="power_controls">
+						<table>
+						<tr>
+							<td>~~~~~~~~~~~~~~~~~~</td>
+							<td>
+								<p id="bubble" class="speech">I'm Sergeant Majure and for the next 60 minutes I OWN you maggots!</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=2>
+								<img id="spin_searg" src="drill1.jpg"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a id="spin" href="#" onClick="startSpin();">Spin</a>
+								<a id="ask" href="#" onClick="ask();">Ask</a>
+								<a id="answer" href="#"onClick="answer();">Answer</a>
+								<a id="right" href="#"onClick="right();">Right</a>
+								<a id="wrong" href="#"onClick="wrong();">Wrong</a>
+							</td>
+						</tr>
+						</table>
+                    </div>
+                </td>
+                <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                    <canvas id="canvas" width="434" height="434">
+                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                    </canvas>
+                </td>
+            </tr>
+        	</table>
+            <h1 height="100px" id="question"></h2>
+            <h1 height="100px" id="qanswer"></h2>
+        <script>
+        	var students = [
+        		{firstname: "Robin", lastname: "Husking", score:0},
+        		{firstname: "Jim", lastname: "Cisler", score:0},
+        		{firstname: "Barb", lastname: "Riker", score:0},
+        		{firstname: "Craig", lastname: "Wood", score:0},
+        		{firstname: "Tony", lastname: "Kriston", score:0},
+        		{firstname: "Irene", lastname: "Pineda", score:0},
+        		{firstname: "Sandeep", lastname: "Aneja", score:0},
+        		{firstname: "Adrien", lastname: "Guguin", score:0},
+        		{firstname: "Neeraj", lastname: "Sharma", score:0},
+        		{firstname: "Lisa", lastname: "Tighe", score:0}
+        	];
+			var winningSegmentNumber = -1;
+			var refill = false;
+			var sayings = [
+			'I want that toilet to shine, {name}!',
+			'Drop and give me 50, {name}!',
+			'Is it too early for you, {name}? Tough luck - ANSWER THE QUESTION!',
+			'Your mama\'s not here to help you, {name}, so stop your crying!',
+			'Answer this question now, {name}! Do I make myself clear?',
+			'If you miss your kitty, {name}, you should\'ve joined a DIFFERENT ARMY!',
+			'Do you know how to peel potatoes, {name}? You better learn!'
+			]
+			var questions = [
+				{question: "What was the nickname used to refer to South-central Ramadi?",
+					 answer: "The hornet's nest."},
+				{question: "What breed of sheep do they (apparently) breed in Ramadi?",
+				 answer: "\"muj\" sheep :-|"},
+				{question: "What does BTF refer to?",
+				 answer: "\"Big Tough Frogman\" - taking on substantial physical exersion and great risk."},
+				{question: "What came after a BTF in, Big Mix-It-Up, BTF out?",
+				 answer: "Big Chow"},
+				{question: "What was the goal of the incursion into enemy held area?",
+				answer: "Decrease the enemy's ability to attack nerby U.S. Army and Marine combat outposts."},
+				{question: "What was the only problem with the position taken up by the SEAL platoon?",
+				 answer: "The building had only one entrance/exit from the first floor. The entrance was not visible from inside."},
+				{question: "When it was time to leave, what was discovered?",
+				 answer: "An IED had been planted outside the entrace to the building."},
+				{question: "How did the SEAL team leave the building?",
+				 answer: "The used a sledgehammer to break a hole in a wall."},
+				{question: "Name at least 2 of the problems encountered by the team after they left the building.",
+				 answer: "1) a soldier fell through the roof, 2) they were exposed to enemy positions, 3) the exit was blocked with an iron gate, 4) the IED was set to explode."},
+				{question: "How did Leif handle this difficult situation?",
+				 answer: "Prioritize and Execute!"},
+				{question: "How did Leif define \"Prioritize and Execute\"?",
+				 answer: "Determine the highest priority, set resources to attacking that problem, then consider the next priority."},
+				{question: "What was Leif's top priority?",
+				 answer: "Security."},
+				{question: "What was Leif's second priority?",
+				 answer: "Find a way to get people off the roof."},
+				{question: "What was Leif's third priority?",
+				 answer: "Get a full headcount."},
+				{question: "What is a particularly effective way to help Prioritize and Execute under pressure?",
+				 answer: "Stay at least one step ahead with careful contingency planning."},
+				{question: "The chapter lists 7 things a leader must do to implement Prioritize and Execute. What are 2 of them?",
+				 answer: "Was that a good answer?"},
+				{question: "The chapter lists 7 things a leader must do to implement Prioritize and Execute. What are 2 of the remaining 4?",
+				 answer: "Was that a good answer?"},
+				{question: "The chapter lists 7 things a leader must do to implement Prioritize and Execute. What are the remaining 3?",
+				 answer: "Was that a good answer?"},
+				{question: "What was the situation the CEO faced and how was he attempting to correct it? (List 2-3 things he was trying to do.)",
+				 answer: "Was that a good answer?"},
+				{question: "What was Jocko's recommendation to the CEO?",
+				 answer: "Decide on a top priority and focus resources on solving that problem."},
+				{question: "Have you ever found yourself in situation in which Prioritize and Execute might have helped?",
+				 answer: "Was that a good answer?"},
+				{question: "What are some possible downsides to Prioritize and Execute and how might you address them?",
+				 answer: "Was that a good answer?"},
+			]
+			
+			var sarge = new Sarge(questions, students, "spinFinished()");
+			
+			// for some reason, we need to specify the callback as
+			// a string that evals to a global function.
+			function spinFinished() {
+				sarge._spinFinished();
+			}
+			
+            // -------------------------------------------------------
+            // Click handler for spin button.
+            // -------------------------------------------------------
+            function startSpin()
+            {
+            	sarge.spinTheWheel();
+            }
+            
+            function ask() {
+            	sarge.askTheNextQuestion();
+            }
+            
+            function answer() {
+            	sarge.showTheAnswer();
+            }
+
+            function right() {
+            	sarge.studentIsRight();
+            }
+
+            function wrong() {
+            	sarge.studentIsWrong();
+            }
+            // -------------------------------------------------------
+            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+            // -------------------------------------------------------
+            function alertPrize()
+            {
+                // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
+				var segmentsLeft = theWheel.numSegments;
+                var winningSegment = theWheel.getIndicatedSegment();
+				winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
+				
+				if (segmentsLeft == 1) {
+					refill = true;
+				}
+				populateBubble(winningSegment.text);
+				theWheel.draw();
+                // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+                //alert("You have won " + winningSegment.text);
+            }
+			
+        </script>
+    </body>
+</html>
