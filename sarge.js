@@ -1,3 +1,7 @@
+
+/*
+ * The Sarge is 
+ */
 var Sarge = function(questions, platoon, callback) {
 	this.questions = questions;
 	this._questionIndex = -1;
@@ -23,6 +27,10 @@ var Sarge = function(questions, platoon, callback) {
 	this.qanswerh = document.getElementById("qanswer");
 }
 
+
+/*
+ * Make a spin wheel for the sarge to spin...
+ */
 Sarge.prototype._makeWheel = function(callback) {
     this.wheel = new Winwheel({
         'numSegments'  : 0,     // Specify number of segments.
@@ -38,10 +46,16 @@ Sarge.prototype._makeWheel = function(callback) {
     });
 }
 
+/*
+ * Set the wheel to spinning...
+ */
 Sarge.prototype.spinTheWheel = function() {
 	if (this.currentStudent) {
+		// remove the previous student from the wheel to give everybody a chance to answer...
 		var segmentsBeforeDelete = this.wheel.numSegments;
 		this.wheel.deleteSegment(this.wheel.getIndicatedSegmentNumber());
+		
+		// if we're all done with the team, put them all back on the wheel...
 		if (segmentsBeforeDelete == 1) {
 			this._fillSegments();
 		}
@@ -54,36 +68,52 @@ Sarge.prototype.spinTheWheel = function() {
 	this.wheel.startAnimation();
 }
 
+/*
+ * When the spin is finished, say something insulting to the lucky winner.
+ */
 Sarge.prototype._spinFinished = function() {
     var winningSegment = this.wheel.getIndicatedSegment();
     this.currentStudent = winningSegment.student;
 	var saying = sayings[Math.floor((Math.random() * this._sayings.length))];
 	this.populateBubble(saying.replace('{name}',winningSegment.student.lastname));
 	
+	// disable spin and enable ask...
 	this.spina.className = "not-active";
 	this.aska.className = "active";
 }
 
+/*
+ * Ask the next question in the list...
+ */
 Sarge.prototype.askTheNextQuestion = function() {
 	if (this._questionIndex < this.questions.length-1) {
 		this._questionIndex += 1;
 		this.questionh.innerHTML = "<br/>"+this.questions[this._questionIndex].question;
+		// enable answer...
 		this.answera.className = "active";
 	} else {
 		this.questionh.innerHTML = "No More Questions!";
 	}
+	// disable ask...
 	this.aska.className = "not-active";
 	
 }
 
+/*
+ * Show the answer to the question...
+ */
 Sarge.prototype.showTheAnswer = function() {
 	this.qanswerh.innerHTML = "<br/>"+this.questions[this._questionIndex].answer;
 	
+	// disable answer and enable right and wrong...
 	this.answera.className = "not-active";
 	this.righta.className = "active";	
 	this.wronga.className = "active";
 }
 
+/*
+ * The quippy sayings the Sarge uses to motivate his recruits...
+ */
 Sarge.prototype._sayings = [
 	'I want that toilet to shine, {name}!',
 	'Drop and give me 50, {name}!',
@@ -94,6 +124,9 @@ Sarge.prototype._sayings = [
 	'Do you know how to peel potatoes, {name}? You better learn!'
 ];
 
+/*
+ * 
+ */
 Sarge.prototype._addPlatoon = function(platoon) {
 	this.platoon = platoon;
 	this.platoon.sort(function(a,b) {
@@ -119,6 +152,9 @@ Sarge.prototype._addPlatoon = function(platoon) {
 	scoresTable.innerHTML = html;
 }
 
+/*
+ * The student responded with the correct answer, so give him/her some points...
+ */
 Sarge.prototype.studentIsRight = function(){
 	var mood = this.getTheSargesMood();	
 	console.log(mood);
@@ -141,6 +177,7 @@ Sarge.prototype.studentIsRight = function(){
 			break;
 	}
 	
+	// resort the platoon on the current score
 	this._addPlatoon(this.platoon);
 	this.spina.className = "active";
 	this.righta.className = "not-active";	
@@ -153,6 +190,9 @@ Sarge.prototype.studentIsRight = function(){
 	console.log(this.currentStudent.firstname + ": "+mood);
 }
 
+/*
+ * The studentresponded with the wrong answer. Not good.
+ */
 Sarge.prototype.studentIsWrong = function(){
 	this.populateBubble("Better shape up quick, "+this.currentStudent.lastname+".");
 	this._addPlatoon(this.platoon);
@@ -165,6 +205,9 @@ Sarge.prototype.studentIsWrong = function(){
 	this.evaluateLastAnswer();
 }
 
+/*
+ * If this is the last question, then decide who won.
+ */
 Sarge.prototype.evaluateLastAnswer = function() {
 	if (this._questionIndex >= this.questions.length-1) {
 		// sort the platoon...
@@ -188,6 +231,9 @@ Sarge.prototype.evaluateLastAnswer = function() {
 	}
 }
 
+/*
+ * Find out how the sarge is feeling today.
+ */
 Sarge.prototype.getTheSargesMood = function() {
 	var rand = Math.floor(Math.random() * 100);
 	console.log(rand);
@@ -199,7 +245,8 @@ Sarge.prototype.getTheSargesMood = function() {
 	else result = "fantastic";
 	return result;
 }
-/**
+
+/*
  * An internal method to fill the wheel with a segment for each 
  * of the grunts in the platoon.
  */
@@ -215,6 +262,7 @@ Sarge.prototype._fillSegments = function () {
 	}
 	this.wheel.draw();
 }
+
 
 Sarge.prototype.populateBubble = function(words) {
 	var bubble = document.getElementById("bubble");

@@ -123,16 +123,16 @@
 				 answer: "Was that a good answer?"},
 			]
 			
-			var sarge = new Sarge(questions, students, "spinFinished()");
 			
 			// for some reason, we need to specify the callback as
 			// a string that evals to a global function.
+			var sarge = new Sarge(questions, students, "spinFinished()");
 			function spinFinished() {
 				sarge._spinFinished();
 			}
 			
             // -------------------------------------------------------
-            // Click handler for spin button.
+            // Handlers for the sarge's orders.
             // -------------------------------------------------------
             function startSpin()
             {
@@ -153,26 +153,7 @@
 
             function wrong() {
             	sarge.studentIsWrong();
-            }
-            // -------------------------------------------------------
-            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
-            // -------------------------------------------------------
-            function alertPrize()
-            {
-                // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
-				var segmentsLeft = theWheel.numSegments;
-                var winningSegment = theWheel.getIndicatedSegment();
-				winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
-				
-				if (segmentsLeft == 1) {
-					refill = true;
-				}
-				populateBubble(winningSegment.text);
-				theWheel.draw();
-                // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
-                //alert("You have won " + winningSegment.text);
-            }
-			
+            }			
         </script>
     </body>
 </html>
